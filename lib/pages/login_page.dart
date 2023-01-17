@@ -2,16 +2,93 @@ import 'package:crud/components/my_button.dart';
 import 'package:crud/components/my_textFields.dart';
 import 'package:crud/components/square_tile.dart';
 import 'package:crud/const/app_const.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   LoginPage({super.key});
 
-  final userNameController = TextEditingController();
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final emailController = TextEditingController();
+
   final passwordController = TextEditingController();
 
 // sign user
-  void signUserIn() {}
+  void signUserIn() async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        });
+
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      Navigator.pop(context);
+      // WRONG EMAIL
+      if (e.code == 'user-not-found') {
+        // show error to user
+        wrongEmailMessage();
+      }
+
+      // WRONG PASSWORD
+      else if (e.code == 'wrong-password') {
+        // show error to user
+        wrongPasswordMessage();
+      }
+    }
+  }
+
+// wrong email msg popup
+  void wrongEmailMessage() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return const AlertDialog(
+            title: Text(
+              'Incorrect Email',
+              style: TextStyle(color: Colors.white),
+            ),
+            icon: Icon(
+              Icons.error,
+              color: Colors.white,
+            ),
+            backgroundColor: Colors.red,
+          );
+        });
+  }
+
+// wrong password msg popup
+  void wrongPasswordMessage() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return const AlertDialog(
+            icon: Icon(
+              Icons.error,
+              color: Colors.white,
+            ),
+            backgroundColor: Colors.red,
+            title: Text(
+              'Incorrect Password',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -26,6 +103,7 @@ class LoginPage extends StatelessWidget {
                 SizedBox(
                   height: screenSize.height * 0.01,
                 ),
+
                 //Logo
                 Icon(
                   Icons.lock,
@@ -34,6 +112,7 @@ class LoginPage extends StatelessWidget {
                 SizedBox(
                   height: screenSize.height * 0.06,
                 ),
+
                 //Welcome Message
                 Text(
                   'Welcome back you\'ve been missed!',
@@ -45,15 +124,17 @@ class LoginPage extends StatelessWidget {
                 SizedBox(
                   height: screenSize.height * 0.031,
                 ),
+
                 //Username Textfield
                 MyTextFields(
-                  controller: userNameController,
+                  controller: emailController,
                   hintText: 'Username',
                   obscureText: false,
                 ),
                 SizedBox(
                   height: screenSize.height * 0.011,
                 ),
+
                 //Password Textfield
                 MyTextFields(
                   controller: passwordController,
@@ -84,6 +165,7 @@ class LoginPage extends StatelessWidget {
                 SizedBox(
                   height: screenSize.height * 0.031,
                 ),
+
                 //Sign In Button
                 MyButton(
                   onTap: signUserIn,
@@ -91,6 +173,7 @@ class LoginPage extends StatelessWidget {
                 SizedBox(
                   height: screenSize.height * 0.061,
                 ),
+                
                 //Or Continue With
                 Padding(
                   padding: EdgeInsets.symmetric(

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "31010099352",
+    "project_id": "login-auth-eec5f",
+    "storage_bucket": "login-auth-eec5f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:31010099352:android:f41fd45031bbf53dedc0ed",
+        "android_client_info": {
+          "package_name": "com.example.crud"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "31010099352-uo1qa6aibar1odnmkh8gmuk16vmlc6qf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRESr94wy-7g8Shz0RSvl9EHY1XeoMhgg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "31010099352-uo1qa6aibar1odnmkh8gmuk16vmlc6qf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
