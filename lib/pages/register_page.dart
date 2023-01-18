@@ -6,21 +6,21 @@ import 'package:crud/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatefulWidget {
+class RegisterPage extends StatefulWidget {
   final Function()? onTap;
-  const LoginPage({super.key, required this.onTap});
+  const RegisterPage({super.key, required this.onTap});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   final emailController = TextEditingController();
-
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
-// sign user
-  void signUserIn() async {
+// sign user up method
+  void signUserUp() async {
     showDialog(
         context: context,
         builder: (context) {
@@ -29,11 +29,17 @@ class _LoginPageState extends State<LoginPage> {
           );
         });
 
+    // try creating user
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
+      if (passwordController.text == confirmPasswordController.text) {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text,
+        );
+      } else {
+        //show error: 'password don't match'
+        showErrorMessage("Password don't match!");
+      }
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
@@ -74,21 +80,21 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 SizedBox(
-                  height: screenSize.height * 0.01,
+                  height: screenSize.height * 0.005,
                 ),
 
                 //Logo
                 Icon(
                   Icons.lock,
-                  size: screenSize.width * 0.25,
+                  size: screenSize.width * 0.18,
                 ),
                 SizedBox(
-                  height: screenSize.height * 0.06,
+                  height: screenSize.height * 0.03,
                 ),
 
-                //Welcome Message
+                //Let's create an account for you
                 Text(
-                  'Welcome back you\'ve been missed!',
+                  'Let\'s create an account for you!',
                   style: TextStyle(
                     color: Colors.grey[700],
                     fontSize: screenSize.width * 0.041,
@@ -118,31 +124,21 @@ class _LoginPageState extends State<LoginPage> {
                   height: screenSize.height * 0.011,
                 ),
 
-                //Forget Password?
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: screenSize.width * 0.063,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        'Forget Password?',
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    ],
-                  ),
+                //Confirm Password Textfield
+                MyTextFields(
+                  controller: confirmPasswordController,
+                  hintText: 'Confirm Password',
+                  obscureText: true,
                 ),
+
                 SizedBox(
                   height: screenSize.height * 0.031,
                 ),
 
                 //Sign In Button
                 MyButton(
-                  onTap: signUserIn,
-                  buttonText: 'Sign In',
+                  onTap: signUserUp,
+                  buttonText: 'Sign Up',
                 ),
                 SizedBox(
                   height: screenSize.height * 0.061,
@@ -191,8 +187,8 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     // Google Button
                     SquareTile(
-                      imagePath: AppConst.googleImage,
                       onTap: () => AuthService().signInWithGoogle(),
+                      imagePath: AppConst.googleImage,
                     ),
                     SizedBox(
                       width: screenSize.width * 0.025,
@@ -213,7 +209,7 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      AppConst.regNow[0],
+                      AppConst.regNow[2],
                       style: TextStyle(
                         color: Colors.grey[700],
                       ),
@@ -224,7 +220,7 @@ class _LoginPageState extends State<LoginPage> {
                     GestureDetector(
                       onTap: widget.onTap,
                       child: Text(
-                        AppConst.regNow[1],
+                        AppConst.regNow[3],
                         style: const TextStyle(
                           color: Colors.blue,
                           fontWeight: FontWeight.bold,

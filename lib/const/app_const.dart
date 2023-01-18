@@ -4,6 +4,8 @@ class AppConst {
   static const List<String> regNow = [
     'Not a member?',
     'Register now',
+    'Already have an account?',
+    'Login now',
   ];
 
   AppConst._();
